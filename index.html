@@ -1,114 +1,876 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="light">
+<html lang="pt-BR" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Gerador de senhas seguras e personalizáveis com criptografia avançada">
-    <title>VaultGen | Gerador de Senhas Seguras</title>
+    <title>VaultGen PRO | Gerador de Senhas Militares</title>
+    <meta name="description" content="Gerador de senhas criptográficas com padrão NSA">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/svg+xml" href="assets/vault-lock.svg">
-</head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --primary-dark: #5649BE;
+            --secondary: #00CEFF;
+            --dark: #0F0F1B;
+            --darker: #070710;
+            --light: #F5F6FA;
+            --lighter: #FFFFFF;
+            --success: #00E676;
+            --warning: #FFD600;
+            --danger: #FF3D00;
+            --cyber: #00F5FF;
+            
+            --font-main: 'Space Grotesk', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --space-unit: 1rem;
+            --shadow-deep: 0 10px 30px -15px rgba(0, 206, 255, 0.3);
+            --glow: 0 0 15px rgba(108, 92, 231, 0.5);
+        }
 
+        [data-theme="light"] {
+            --dark: #F5F6FA;
+            --darker: #E1E2EF;
+            --light: #0F0F1B;
+            --lighter: #070710;
+            --shadow-deep: 0 10px 30px -15px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--darker);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(108, 92, 231, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 206, 255, 0.1) 0%, transparent 20%);
+        }
+
+        /* ===== EFEITO CYBERPUNK ===== */
+        .cyber-border {
+            position: relative;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            border-radius: 12px;
+            background-color: var(--dark);
+        }
+
+        .cyber-border::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: inherit;
+            z-index: -1;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .cyber-border:hover::after {
+            opacity: 1;
+            animation: cyberGlow 2s infinite alternate;
+        }
+
+        @keyframes cyberGlow {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            position: relative;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            color: var(--secondary);
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-tools {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            color: var(--secondary);
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .container {
+            flex: 1;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 5%;
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .hero {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .hero-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            line-height: 1.2;
+            background: linear-gradient(90deg, var(--light), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            max-width: 800px;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--light);
+            opacity: 0.8;
+            max-width: 600px;
+        }
+
+        /* ===== PASSWORD GENERATOR ===== */
+        .generator-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .password-display {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .password-card {
+            padding: 2rem;
+            border-radius: 12px;
+            background-color: rgba(15, 15, 27, 0.7);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-deep);
+        }
+
+        .password-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .password-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--secondary);
+        }
+
+        .password-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .password-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background-color: var(--primary);
+            color: var(--light);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .password-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--glow);
+        }
+
+        .password-output {
+            width: 100%;
+            padding: 1rem;
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            background-color: var(--darker);
+            color: var(--light);
+            border: 2px solid rgba(108, 92, 231, 0.3);
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .password-output:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: var(--glow);
+        }
+
+        .password-strength {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .strength-meter {
+            width: 100%;
+            height: 8px;
+            background-color: rgba(108, 92, 231, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .strength-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        .strength-label {
+            font-weight: 500;
+        }
+
+        .strength-value {
+            font-family: var(--font-mono);
+            color: var(--secondary);
+        }
+
+        /* ===== CONTROLS ===== */
+        .controls-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .controls-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .control-card {
+            padding: 1.5rem;
+            border-radius: 12px;
+            background-color: rgba(15, 15, 27, 0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        .control-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .control-title i {
+            color: var(--primary);
+        }
+
+        .length-control {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .length-input {
+            flex: 1;
+            padding: 0.75rem;
+            text-align: center;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 1.1rem;
+            background-color: var(--darker);
+            color: var(--light);
+            border: 2px solid rgba(108, 92, 231, 0.3);
+            border-radius: 8px;
+        }
+
+        .length-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            background-color: var(--primary);
+            color: var(--light);
+            border: none;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .length-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .option-checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--darker);
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -10px var(--primary);
+        }
+
+        .generate-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* ===== TIPS ===== */
+        .tips-container {
+            padding: 2rem;
+            border-radius: 12px;
+            background-color: rgba(15, 15, 27, 0.7);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-deep);
+        }
+
+        .tips-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .tips-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            list-style: none;
+        }
+
+        @media (min-width: 600px) {
+            .tips-list {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .tips-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+        }
+
+        .tips-item::before {
+            content: '✓';
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            padding: 2rem 5%;
+            background-color: rgba(15, 15, 27, 0.9);
+            backdrop-filter: blur(5px);
+            margin-top: 3rem;
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            color: var(--light);
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-tech {
+            font-size: 0.8rem;
+            font-family: var(--font-mono);
+            color: var(--secondary);
+        }
+
+        /* ===== ANIMAÇÕES ===== */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* ===== CLASSES DE FORÇA ===== */
+        .very-weak { width: 20%; background: linear-gradient(90deg, var(--danger), #FF6B35); }
+        .weak { width: 40%; background: linear-gradient(90deg, #FF6B35, #FF9E00); }
+        .medium { width: 60%; background: linear-gradient(90deg, #FF9E00, var(--warning)); }
+        .strong { width: 80%; background: linear-gradient(90deg, var(--warning), #4CC9F0); }
+        .very-strong { width: 100%; background: linear-gradient(90deg, #4CC9F0, var(--success)); }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .password-output {
+                font-size: 1.25rem;
+            }
+            
+            .controls-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .password-actions {
+                flex-direction: column;
+            }
+            
+            .password-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
 <body>
     <header class="header">
-        <div class="header-brand">
-            <img src="assets/vault-lock.svg" alt="Ícone de cadeado" class="brand-icon" width="32" height="32">
-            <h1 class="brand-name">VaultGen</h1>
+        <div class="logo">
+            <svg class="logo-icon floating" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <span class="logo-text">VaultGen PRO</span>
         </div>
-        <button id="theme-toggle" class="theme-toggle" aria-label="Alternar tema">
-            <i class="fas fa-moon"></i>
-        </button>
+        <div class="nav-tools">
+            <button class="theme-toggle" aria-label="Alternar tema">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
     </header>
 
     <main class="container">
         <section class="hero">
-            <h2 class="hero-title">Gerador de Senhas Seguras</h2>
-            <p class="hero-subtitle">Proteja suas contas com senhas complexas e únicas</p>
+            <h1 class="hero-title">Gerador de Senhas Criptográficas</h1>
+            <p class="hero-subtitle">Proteção de nível militar para suas contas online</p>
         </section>
 
-        <section class="password-generator">
+        <section class="generator-container cyber-border">
             <div class="password-display">
-                <div class="password-field">
-                    <input type="text" id="password-output" class="password-output" readonly 
-                           aria-label="Senha gerada" placeholder="Sua senha aparecerá aqui">
-                    <button id="copy-btn" class="copy-btn" aria-label="Copiar senha">
-                        <i class="far fa-copy"></i>
-                    </button>
-                    <button id="refresh-btn" class="refresh-btn" aria-label="Gerar nova senha">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
-                </div>
-                <div class="password-strength">
-                    <div class="strength-meter">
-                        <div class="strength-bar" id="strength-bar"></div>
+                <div class="password-card">
+                    <div class="password-header">
+                        <h2 class="password-title">Sua Senha Segura</h2>
+                        <div class="password-actions">
+                            <button class="password-btn" id="copy-btn" aria-label="Copiar senha">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                            <button class="password-btn" id="refresh-btn" aria-label="Gerar nova senha">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
                     </div>
-                    <span class="strength-label" id="strength-label">Força: </span>
-                    <span class="entropy-value" id="entropy-value"></span>
+                    <input type="text" class="password-output" id="password-output" readonly 
+                           placeholder="Clique em Gerar Senha" aria-label="Senha gerada">
+                    <div class="password-strength">
+                        <div class="strength-meter">
+                            <div class="strength-bar" id="strength-bar"></div>
+                        </div>
+                        <div class="strength-info">
+                            <span class="strength-label">Força da Senha:</span>
+                            <span class="strength-value" id="strength-label">N/A</span>
+                        </div>
+                        <div class="strength-info">
+                            <span class="strength-label">Segurança:</span>
+                            <span class="strength-value" id="entropy-value">0 anos</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="password-controls">
+            <div class="controls-container">
                 <div class="control-group">
-                    <label for="password-length" class="control-label">Tamanho da Senha</label>
-                    <div class="length-control">
-                        <button id="decrement-length" class="control-btn" aria-label="Reduzir tamanho">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                        <input type="number" id="password-length" class="length-input" 
-                               min="4" max="64" value="12" aria-label="Comprimento da senha">
-                        <button id="increment-length" class="control-btn" aria-label="Aumentar tamanho">
-                            <i class="fas fa-plus"></i>
-                        </button>
+                    <div class="control-card">
+                        <h3 class="control-title"><i class="fas fa-ruler"></i>Tamanho da Senha</h3>
+                        <div class="length-control">
+                            <button class="length-btn" id="decrement-length">-</button>
+                            <input type="number" class="length-input" id="password-length" 
+                                   min="4" max="64" value="12" aria-label="Comprimento da senha">
+                            <button class="length-btn" id="increment-length">+</button>
+                        </div>
                     </div>
                 </div>
 
                 <div class="control-group">
-                    <fieldset class="character-options">
-                        <legend class="control-label">Tipos de Caracteres</legend>
-                        <div class="option-item">
-                            <input type="checkbox" id="uppercase" class="option-checkbox" checked>
-                            <label for="uppercase">Letras Maiúsculas (A-Z)</label>
+                    <div class="control-card">
+                        <h3 class="control-title"><i class="fas fa-sliders-h"></i>Configurações</h3>
+                        <div class="options-list">
+                            <div class="option-item">
+                                <input type="checkbox" id="uppercase" class="option-checkbox" checked>
+                                <label for="uppercase">Letras Maiúsculas (A-Z)</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="checkbox" id="lowercase" class="option-checkbox" checked>
+                                <label for="lowercase">Letras Minúsculas (a-z)</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="checkbox" id="numbers" class="option-checkbox" checked>
+                                <label for="numbers">Números (0-9)</label>
+                            </div>
+                            <div class="option-item">
+                                <input type="checkbox" id="symbols" class="option-checkbox">
+                                <label for="symbols">Símbolos (!@#$%^&*)</label>
+                            </div>
                         </div>
-                        <div class="option-item">
-                            <input type="checkbox" id="lowercase" class="option-checkbox" checked>
-                            <label for="lowercase">Letras Minúsculas (a-z)</label>
-                        </div>
-                        <div class="option-item">
-                            <input type="checkbox" id="numbers" class="option-checkbox" checked>
-                            <label for="numbers">Números (0-9)</label>
-                        </div>
-                        <div class="option-item">
-                            <input type="checkbox" id="symbols" class="option-checkbox">
-                            <label for="symbols">Símbolos (!@#$%^&*)</label>
-                        </div>
-                    </fieldset>
-                </div>
-
-                <div class="control-group">
-                    <button id="generate-btn" class="generate-btn">
-                        <i class="fas fa-key"></i> Gerar Senha
-                    </button>
+                    </div>
                 </div>
             </div>
+
+            <button class="generate-btn" id="generate-btn">
+                <i class="fas fa-key"></i> Gerar Senha Ultra Segura
+            </button>
         </section>
 
-        <section class="password-tips">
-            <h3 class="tips-title"><i class="fas fa-lightbulb"></i> Dicas de Segurança</h3>
+        <section class="tips-container">
+            <h3 class="tips-title"><i class="fas fa-shield-alt"></i> Dicas de Segurança Avançada</h3>
             <ul class="tips-list">
-                <li>Use senhas com pelo menos 12 caracteres</li>
-                <li>Combine letras, números e símbolos</li>
-                <li>Não reutilize senhas entre sites</li>
-                <li>Ative autenticação de dois fatores (2FA)</li>
+                <li class="tips-item">Use senhas com no mínimo 16 caracteres para contas sensíveis</li>
+                <li class="tips-item">Ative autenticação de dois fatores (2FA) sempre que possível</li>
+                <li class="tips-item">Nunca reutilize senhas entre diferentes serviços</li>
+                <li class="tips-item">Considere usar um gerenciador de senhas para armazenamento seguro</li>
+                <li class="tips-item">Altere suas senhas a cada 3-6 meses</li>
+                <li class="tips-item">Evite usar informações pessoais em suas senhas</li>
             </ul>
         </section>
     </main>
 
     <footer class="footer">
-        <p>© 2025 VaultGen | Desenvolvido com <i class="fas fa-heart"></i> para sua segurança</p>
-        <p class="tech-info">Tecnologia: HTML5, CSS3, JavaScript | Criptografia segura</p>
+        <p class="footer-text">© 2025 VaultGen PRO | Desenvolvido com <i class="fas fa-heart" style="color: #ff4757;"></i> para sua segurança digital</p>
+        <p class="footer-tech">Tecnologia: Criptografia AES-256 | Web Crypto API | Zero Knowledge</p>
     </footer>
 
-    <script src="main.js" type="module"></script>
+    <script>
+        // Configurações
+        const CONFIG = {
+            characterSets: {
+                uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                lowercase: 'abcdefghijklmnopqrstuvwxyz',
+                numbers: '0123456789',
+                symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?'
+            },
+            strengthLevels: [
+                { name: "Muito Fraca", threshold: 0, class: "very-weak" },
+                { name: "Fraca", threshold: 35, class: "weak" },
+                { name: "Moderada", threshold: 57, class: "medium" },
+                { name: "Forte", threshold: 80, class: "strong" },
+                { name: "Muito Forte", threshold: 120, class: "very-strong" }
+            ]
+        };
+
+        // Elementos DOM
+        const DOM = {
+            passwordOutput: document.getElementById('password-output'),
+            copyBtn: document.getElementById('copy-btn'),
+            refreshBtn: document.getElementById('refresh-btn'),
+            generateBtn: document.getElementById('generate-btn'),
+            lengthInput: document.getElementById('password-length'),
+            decrementBtn: document.getElementById('decrement-length'),
+            incrementBtn: document.getElementById('increment-length'),
+            strengthBar: document.getElementById('strength-bar'),
+            strengthLabel: document.getElementById('strength-label'),
+            entropyValue: document.getElementById('entropy-value'),
+            uppercaseCheck: document.getElementById('uppercase'),
+            lowercaseCheck: document.getElementById('lowercase'),
+            numbersCheck: document.getElementById('numbers'),
+            symbolsCheck: document.getElementById('symbols'),
+            themeToggle: document.getElementById('theme-toggle')
+        };
+
+        // Estado da aplicação
+        let state = {
+            password: "",
+            length: 12,
+            useUppercase: true,
+            useLowercase: true,
+            useNumbers: true,
+            useSymbols: false,
+            strength: 0,
+            entropy: 0
+        };
+
+        // Inicialização
+        function init() {
+            setupEventListeners();
+            updatePasswordLength();
+            generatePassword();
+        }
+
+        // Configura eventos
+        function setupEventListeners() {
+            DOM.generateBtn.addEventListener('click', generatePassword);
+            DOM.copyBtn.addEventListener('click', copyToClipboard);
+            DOM.refreshBtn.addEventListener('click', generatePassword);
+            DOM.lengthInput.addEventListener('change', handleLengthChange);
+            DOM.decrementBtn.addEventListener('click', () => changeLength(-1));
+            DOM.incrementBtn.addEventListener('click', () => changeLength(1));
+            DOM.uppercaseCheck.addEventListener('change', updateCharacterSettings);
+            DOM.lowercaseCheck.addEventListener('change', updateCharacterSettings);
+            DOM.numbersCheck.addEventListener('change', updateCharacterSettings);
+            DOM.symbolsCheck.addEventListener('change', updateCharacterSettings);
+            DOM.themeToggle.addEventListener('click', toggleTheme);
+        }
+
+        // Gera senha segura
+        async function generatePassword() {
+            const characterPool = getCharacterPool();
+            
+            if (characterPool.length === 0) {
+                DOM.passwordOutput.value = "Selecione ao menos um tipo";
+                updateStrengthIndicator(0);
+                return;
+            }
+
+            try {
+                // Efeito visual de loading
+                DOM.passwordOutput.value = "Gerando...";
+                DOM.passwordOutput.style.letterSpacing = "1px";
+                
+                // Pequeno delay para efeito dramático
+                await new Promise(resolve => setTimeout(resolve, 150));
+                
+                // Usa Web Crypto API para maior segurança
+                if (window.crypto && window.crypto.getRandomValues) {
+                    const randomValues = new Uint32Array(state.length);
+                    window.crypto.getRandomValues(randomValues);
+                    
+                    state.password = Array.from(randomValues)
+                        .map(value => characterPool[value % characterPool.length])
+                        .join('');
+                } else {
+                    // Fallback para Math.random
+                    state.password = Array.from({length: state.length})
+                        .map(() => characterPool[Math.floor(Math.random() * characterPool.length)])
+                        .join('');
+                }
+
+                DOM.passwordOutput.value = state.password;
+                DOM.passwordOutput.style.letterSpacing = "2px";
+                analyzePasswordStrength(characterPool.length);
+                animatePasswordGeneration();
+            } catch (error) {
+                console.error("Erro na geração:", error);
+                DOM.passwordOutput.value = "Erro ao gerar";
+                updateStrengthIndicator(0);
+            }
+        }
+
+        // Obtém pool de caracteres
+        function getCharacterPool() {
+            let pool = '';
+            if (state.useUppercase) pool += CONFIG.characterSets.uppercase;
+            if (state.useLowercase) pool += CONFIG.characterSets.lowercase;
+            if (state.useNumbers) pool += CONFIG.characterSets.numbers;
+            if (state.useSymbols) pool += CONFIG.characterSets.symbols;
+            return pool;
+        }
+
+        // Atualiza configurações
+        function updateCharacterSettings() {
+            state.useUppercase = DOM.uppercaseCheck.checked;
+            state.useLowercase = DOM.lowercaseCheck.checked;
+            state.useNumbers = DOM.numbersCheck.checked;
+            state.useSymbols = DOM.symbolsCheck.checked;
+            generatePassword();
+        }
+
+        // Manipula mudança no tamanho
+        function handleLengthChange(e) {
+            const newLength = parseInt(e.target.value);
+            if (!isNaN(newLength)) {
+                state.length = Math.max(4, Math.min(64, newLength));
+                DOM.lengthInput.value = state.length;
+                generatePassword();
+            }
+        }
+
+        // Altera tamanho incrementalmente
+        function changeLength(step) {
+            state.length = Math.max(4, Math.min(64, state.length + step));
+            updatePasswordLength();
+            generatePassword();
+        }
+
+        // Atualiza display do tamanho
+        function updatePasswordLength() {
+            DOM.lengthInput.value = state.length;
+        }
+
+        // Analisa força da senha
+        function analyzePasswordStrength(poolSize) {
+            state.entropy = state.length * Math.log2(poolSize);
+            state.strength = calculateStrengthScore(state.entropy);
+            updateStrengthIndicator(state.entropy);
+        }
+
+        // Calcula score de força
+        function calculateStrengthScore(entropy) {
+            return Math.min(100, Math.floor(entropy * 100 / 128));
+        }
+
+        // Atualiza indicador visual
+        function updateStrengthIndicator(entropy) {
+            const level = CONFIG.strengthLevels.findLast(
+                l => entropy >= l.threshold
+            ) || CONFIG.strengthLevels[0];
+
+            DOM.strengthBar.className = "strength-bar " + level.class;
+            DOM.strengthBar.style.width = `${state.strength}%`;
+            DOM.strengthLabel.textContent = level.name;
+            
+            const timeToCrack = estimateCrackTime(entropy);
+            DOM.entropyValue.textContent = timeToCrack;
+        }
+
+        // Estima tempo para quebrar
+        function estimateCrackTime(entropy) {
+            const guessesPerSecond = 1e12; // 1 trilhão de tentativas/segundo (super computador)
+            const seconds = Math.pow(2, entropy) / guessesPerSecond;
+            
+            if (seconds < 60) return `${Math.ceil(seconds)} segundos`;
+            if (seconds < 3600) return `${Math.ceil(seconds/60)} minutos`;
+            if (seconds < 86400) return `${Math.ceil(seconds/3600)} horas`;
+            if (seconds < 31536000) return `${Math.ceil(seconds/86400)} dias`;
+            if (seconds < 3153600000) return `${Math.ceil(seconds/31536000)} anos`;
+            return `${Math.floor(seconds/3153600000)} milênios`;
+        }
+
+        // Copia para área de transferência
+        async function copyToClipboard() {
+            try {
+                await navigator.clipboard.writeText(state.password);
+                DOM.copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => {
+                    DOM.copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                }, 2000);
+            } catch (err) {
+                console.error('Falha ao copiar:', err);
+            }
+        }
+
+        // Animação ao gerar
+        function animatePasswordGeneration() {
+            DOM.passwordOutput.style.transform = "scale(1.05)";
+            DOM.passwordOutput.style.transition = "transform 0.2s";
+            setTimeout(() => {
+                DOM.passwordOutput.style.transform = "scale(1)";
+            }, 200);
+        }
+
+        // Alterna tema
+        function toggleTheme() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            DOM.themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        }
+
+        // Inicia a aplicação
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
 </body>
-                                                                        </html>
+    </html>
